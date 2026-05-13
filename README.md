@@ -26,7 +26,7 @@
   - смена статуса
 
 ## Технологии
-- Python
+- Python 3.11+ (рекомендуется 3.12 или 3.13)
 - aiogram 3
 - PostgreSQL
 - SQLAlchemy (async)
@@ -35,37 +35,57 @@
 - Docker Compose
 - VS Code
 
-## Установка зависимостей
+## Первый запуск (шаг за шагом)
+1. Создайте виртуальное окружение и активируйте его:
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
+```
+
+2. Обновите пакетные инструменты и установите зависимости:
+```bash
+python -m pip install -U pip setuptools wheel
 pip install -r requirements.txt
 ```
 
-## Настройка окружения
-1. Скопируйте шаблон:
+3. Создайте `.env` из шаблона:
 ```bash
 cp .env.example .env
 ```
-2. Заполните переменные в `.env`:
-- `BOT_TOKEN`
-- `ADMIN_ID`
-- `DATABASE_URL`
+Заполните значения:
+- `BOT_TOKEN` — токен от @BotFather
+- `ADMIN_ID` — ваш числовой Telegram ID
+- `DATABASE_URL` — URL подключения к PostgreSQL
 
-## Запуск PostgreSQL через Docker Compose
+4. Запустите PostgreSQL через Docker Compose:
 ```bash
 docker compose up -d
 ```
 
-## Миграции БД
+5. Примените миграции:
 ```bash
 alembic upgrade head
 ```
 
-## Запуск бота
+6. Запустите бота:
 ```bash
 python -m bot.main
 ```
+
+## Важно для Python 3.14 (ошибка `pydantic-core` / `pyo3-ffi`)
+Если при `pip install -r requirements.txt` вы видите ошибку вида:
+`configured Python interpreter version (3.14) is newer than PyO3's maximum supported version` — значит pip пытается собрать старую версию `pydantic-core` из исходников.
+
+Что сделать:
+1. Убедитесь, что используете актуальный pip:
+```bash
+python -m pip install -U pip setuptools wheel
+```
+2. Установите зависимости заново (в чистом venv):
+```bash
+pip install --no-cache-dir -r requirements.txt
+```
+3. Проверьте, что Python не слишком новый для части экосистемы на вашей машине. Самый стабильный вариант для учебного/прикладного проекта: Python 3.12/3.13.
 
 ## Структура проекта
 ```text
